@@ -1,11 +1,28 @@
 import { useNavigate } from "react-router-dom";
 import login from "../UI_Images/Login.jpg";
 import login_svg from "../UI_Images/login.svg";
-
+import { loginSchema } from "..";
+import { useFormik } from "formik";
 
 function Login() {
 
   const navigate = useNavigate();
+
+  async function onSubmit (values, actions) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    actions.resetForm();
+  }
+
+  const {values, errors, touched, isSubmitting, handleSubmit, handleChange, handleBlur} = useFormik(
+    {
+      initialValues:{
+        email: "",
+        password: ""
+      },
+      validationSchema: loginSchema,
+      onSubmit,
+    }
+  );
 
   return (
     <div className="w-screen h-screen flex flex-row justify-between items-center overflow-hidden">
@@ -13,7 +30,7 @@ function Login() {
           <img src={login} alt="Sign Up Image" />
         </div>
         <div className="h-full w-1/2 bg-[#0054C6] flex justify-center items-center rounded-l-lg">
-          <form className="h-3/5 w-3/5 flex flex-col justify-evenly">
+          <form onSubmit={handleSubmit} className="h-3/5 w-3/5 flex flex-col justify-evenly">
             <div className="w-full h-20 flex flex-col justify-between items-center">
               <button className="rounded-full h-10 w-10 bg-purple-400 flex items-center justify-center">
                 <img className="h-7 w-7 pr-1" src={login_svg} alt="Register" />
@@ -22,18 +39,42 @@ function Login() {
             </div>
             <div>
               <input
-                className="border h-14 w-full rounded-xl border-slate-500 px-4 text-lg outline-none placeholder:text-slate-700"
+                id="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={
+                  errors.email && touched.email
+                    ? "border-2 border-red-500 h-14 w-full rounded-xl px-4 text-lg outline-none"
+                    : "border-0 h-14 w-full rounded-xl px-4 text-lg outline-none placeholder:text-slate-700"
+                }
                 placeholder="Email"
               ></input>
+               {errors.email && touched.email ? (
+              <p className="pl-2 text-red-500 text-sm">{errors.email}</p>
+            ) : null}
             </div>
             <div>
               <input
-                className="border h-14 w-full rounded-xl border-slate-500 px-4 text-lg outline-none placeholder:text-slate-700"
+                id="password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={
+                  errors.password && touched.password
+                    ? "border-2 border-red-500 h-14 w-full rounded-xl px-4 text-lg outline-none"
+                    : "border-0 h-14 w-full rounded-xl px-4 text-lg outline-none placeholder:text-slate-700"
+                }
                 placeholder="Password"
               ></input>
+               {errors.password && touched.password ? (
+              <p className="pl-2 text-red-500 text-sm">{errors.password}</p>
+            ) : null}
             </div>
             <div>
-              <button className="h-10 bg-[#57cc99] text-white text-center w-full rounded-md">
+              <button
+                disabled={isSubmitting} 
+                className="h-10 bg-[#57cc99] text-white text-center w-full rounded-md disabled:opacity-50 disabled:pointer-events-none">
                 LOGIN
               </button>
             </div>

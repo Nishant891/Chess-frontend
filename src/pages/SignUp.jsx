@@ -3,13 +3,27 @@ import Signup from "../UI_Images/SignUp.jpg";
 import { useFormik } from "formik";
 import { signUpSchema } from "..";
 import register from "../UI_Images/register.svg";
+import Axios from "axios";
+import { toast } from "react-toastify";
+
 function SignUp() {
   const navigate = useNavigate();
 
   async function onSubmit(values, actions) {
-    console.log(values);
-    console.log(actions);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const id = toast.loading("Please Wait...");
+    await new Promise((resolve) => {
+      console.log(values);
+      Axios.post('http://localhost:8000/signup',{
+        username:values.username,
+        email:values.email,
+        password:values.password,
+      }).then((response) => {
+          toast.update(id,{render:"Welcome!", type:"success", isLoading:false})
+      }).catch((error) => {
+          toast.update(id,{render:"Sorry try again", type:"error", isLoading:false})
+      })
+      setTimeout(resolve, 1000)
+    });
     actions.resetForm();
   }
 
@@ -122,6 +136,7 @@ function SignUp() {
           </div>
           <div>
             <button
+              type="submit"
               disabled={isSubmitting}
               className="h-10 bg-[#57cc99] text-white text-center w-full rounded-md disabled:opacity-50 disabled:pointer-events-none"
             >
