@@ -5,24 +5,46 @@ import { signUpSchema } from "..";
 import register from "../UI_Images/register.svg";
 import Axios from "axios";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 function SignUp() {
   const navigate = useNavigate();
 
+  Axios.defaults.withCredentials = true;
+
   async function onSubmit(values, actions) {
-    const id = toast.loading("Please Wait...");
     await new Promise((resolve) => {
-      console.log(values);
-      Axios.post('http://localhost:8000/signup',{
-        username:values.username,
-        email:values.email,
-        password:values.password,
-      }).then((response) => {
-          toast.update(id,{render:"Welcome!", type:"success", isLoading:false})
-      }).catch((error) => {
-          toast.update(id,{render:"Sorry try again", type:"error", isLoading:false})
+      Axios.post("http://localhost:8000/signup", {
+        username: values.username,
+        email: values.email,
+        password: values.password,
       })
-      setTimeout(resolve, 1000)
+        .then((response) => {
+          toast.success(`Hello ${values.username}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          navigate("/dashboard");
+        })
+        .catch((error) => {
+          toast.error("Sorry please try again", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        });
+      setTimeout(resolve, 1000);
     });
     actions.resetForm();
   }
@@ -46,7 +68,13 @@ function SignUp() {
     onSubmit,
   });
 
-  console.log(errors);
+  useEffect(() => {
+    Axios.get("http://localhost:8000/signup").then((response) => {
+      if(response.data.loggedIn == true){
+        navigate('/dashboard');
+      }
+    })
+  },[])
 
   return (
     <div className="w-screen h-screen flex flex-row justify-between items-center overflow-hidden">

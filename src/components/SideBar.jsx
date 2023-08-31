@@ -15,8 +15,7 @@ function SideBar() {
   return (
     <div className="text-white bg-[#021325] ">
       <div className="bg-transparent w-full h-full flex flex-col gap-4 justify-start items-center">
-        <div className="w-11/12 h-36 rounded-xl outline outline-offset-2 outline-slate-400/25 mt-4"></div>
-        <div className="w-11/12 h-32 rounded-xl flex flex-col gap-3 justify-evenly mt-4">
+        <div className="w-11/12 h-1/5 rounded-xl flex flex-col gap-3 justify-evenly mt-4">
           {[
             ["Profile", profile],
             ["Marketplace", marketplace],
@@ -28,6 +27,11 @@ function SideBar() {
               image={item[1]}
             />
           ))}
+        </div>
+        <div className="w-11/12 h-4/5 mb-4 rounded-xl outline outline-offset-2 outline-slate-400/25 mt-4">
+          <div className="border-b-2 border-slate-400/25 h-10 flex justify-center items-center">
+            <p>ROOMS</p>
+          </div>
         </div>
       </div>
     </div>
